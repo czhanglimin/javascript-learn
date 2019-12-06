@@ -59,3 +59,208 @@ const lily = new Person('lily')
 * 是类的默认方法
 * 用于传递参数返回实例对象
 * 通过new命令生成对象实例时，自动调用该方法，如果没有显示定义，类的内部会自动创建一个constructor()
+## 继承
+```javascript
+class Father {
+  // this指代父类Father
+  contructor(x, y) {
+	this.x = x
+	this.y = y
+  }
+  money() {
+	console.log('money')
+  }
+  sum() {
+	console.log(this.x + this.y)
+  }
+}
+class Son extends Father {
+  // this指代子类Son
+  contructor(x, y) {
+	this.x = x
+	this.y = y
+  }
+}
+const son = new Son()
+// ok
+son.money()
+// uncaught referenceerror: must call super constructor
+son.sum(1,2)
+```
+解释：
+* Son中的this指代Son,Father中的this指代父类Father，son.sum(1,2)执行后Son子类确实可以获取到值，但该值并未传递给Father，因此报错
+### super关键字
+* 用于**访问**以及**调用**父类上的函数
+* 可调用父类的构造函数，也可调用父类的普通函数
+```javascript
+class Father {
+  // this指代父类Father
+  contructor(x, y) {
+	this.x = x
+	this.y = y
+  }
+  money() {
+	console.log('money')
+  }
+  sum() {
+	console.log(this.x + this.y)
+  }
+}
+class Son extends Father {
+  // this指代子类Son
+  contructor(x, y) {
+	// this.x = x
+	// this.y = y
+
+	// 调用父类中的构造函数
+	super(x,y);
+  }
+}
+const son = new Son()
+// ok
+son.money()
+// ok 3
+son.sum(1,2)
+```
+### 使用父类的普通函数
+
+```javascript
+class Father {
+  say() {
+	console.log('father')
+  }
+}
+class Son extends Father {
+  say() {
+	console.log('son')
+  }
+}
+const son = new Son()
+// son
+say()
+```
+
+```javascript
+class Father {
+  say() {
+	console.log('father')
+  }
+}
+class Son extends Father {
+  say() {
+	// super.say()即调用父类的方法
+	console.log(super.say())
+  }
+}
+const son = new Son()
+// father
+say()
+```
+备注：
+
+* 继承中的属性或方法查找原则：**就近原则**即子类没有才去父类查找
+* 子类扩展自己的方法时，super必须在子类this之前调用
+```javascript
+class Father {
+  constructor() {
+	this.x = x
+	this.y = y
+  }
+  sum() {
+	console.log(this.x + this.y)
+  }
+}
+class Son extends Father {
+  constructor() {
+	// super()在this之前调用
+	super(x,y)
+	this.x = x
+	this.y = y
+  }
+  subtract() {
+	console.log(this.x - this.y)
+  }
+}
+const son = new Son()
+// father
+say()
+```
+注意点：
+* 在ES6中没有变量提升，所以必须先定义类，然后才能实例化对象
+
+```javascript
+const son = new Son()
+// 报错
+say()
+
+class Son {
+  constructor() {
+	// super()在this之前调用
+	super(x,y)
+	this.x = x
+	this.y = y
+  }
+  subtract() {
+	console.log(this.x - this.y)
+  }
+}
+```
+* 类里面的共有的属性和方法要加this使用
+## 类里面的this指向问题
+* constructor 里面的this指代的是创建的**实例对象**
+* 普通方法 里面的this指代的是**调用对象**
+
+```javascript
+let that
+
+class Son {
+  constructor() {
+	// constructor 里面的this指代的是 创建的实例对象
+	that = this
+	this.x = x
+	this.y = y
+	this.btn = document.querySelector('button')
+	this.btn.click = this.sing;
+  }
+  sing() {
+  // 这个方法里面的this指向btn按钮，因为这个按钮调用了这个函数
+  console.log(this)
+  // 如果在这个函数中想访问constructor里的this，可在全局声明一个变量，并将constructor里的this赋值给该全局变量，即代码里的that
+  }
+  dance() {
+  // 这个方法里面的this指向son对象，因为son对象调用了这个函数
+  console.log(this)
+  }
+}
+const son = new Son()
+son.dance()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
