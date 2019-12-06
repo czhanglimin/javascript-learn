@@ -129,3 +129,14 @@ JS使我们有能力创建动态页面，事件是可以被JS侦测到的行为�
       }
     </script>
 ```
+# 操作元素
+## element.innerText
+* 不识别HTML标签
+* 去掉空格和换行
+* 非标准，可读取也可改写
+## element.innerHTML
+* 可识别HTML标签
+* 保留空格和换行
+* W3C标准，可读取也可换行
+## 表单元素的属性操作
+type value checked selected disabled
